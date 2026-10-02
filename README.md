@@ -26,13 +26,13 @@ Unlike randomly generated quizzes or user-contributed questions, **EduHarvest** 
 
 The extraction process is split into two modular scripts to ensure data integrity.
 
-### 1. The Extractor (`A.py`)
+### 1. The Extractor (`scraper.py`)
 Connects to the API, paginates through historical years, and builds the initial dataset. 
 * **Phase 1:** Pulls the base questions, options, and correct answers.
 * **Phase 2:** Spawns concurrent threads to fetch detailed explanations for every single question.
 * **Phase 3:** Flattens the nested JSON responses into a structured Pandas DataFrame and exports `{subject}_raw_cbt.csv`.
 
-### 2. The Classifier (`B.py`)
+### 2. The Classifier (`topic_classifier.py`)
 Acts as the transformation layer. It reads the raw CSV and uses Regex word-boundary matching to assign each question to a specific academic chapter based on a predefined `TOPIC_DICTIONARY`. It then sorts the entire dataset chronologically by chapter and exports a production-ready `{subject}_final_cbt.csv`.
 
 ---
@@ -44,17 +44,17 @@ You will need Python installed along with a few standard data libraries:
 `pip install pandas requests beautifulsoup4`
 
 ### Step 1: Run the Scraper
-1. Open `A.py`.
+1. Open `scraper.py`.
 2. Edit the configuration block at the top to set your desired `SUBJECT` and `TARGET` (number of questions).
 3. Run the script:
-`python A.py`
+`python scraper.py`
 
 ### Step 2: Classify the Data
-1. Open `B.py`.
+1. Open `topic_classifier.py`.
 2. Ensure the `SUBJECT` variable matches the one you just scraped.
 3. Define your `TOPIC_DICTIONARY` if you are scraping a new subject.
 4. Run the script:
-`python B.py`
+`python topic_classifier.py`
 *(This generates `{subject}_final_cbt.csv`, ready for database injection).*
 
 ---
